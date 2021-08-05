@@ -10,8 +10,9 @@ module GoogleDistanceMatrix
 
     def initialize(matrix)
       @matrix = matrix
-    end # Public: Finds routes for given place.
+    end
 
+    # Public: Finds routes for given place.
     #
     # place   -  Either an origin or destination, or an object which you built the place from
     #
@@ -53,9 +54,7 @@ module GoogleDistanceMatrix
       origin = ensure_place options[:origin]
       destination = ensure_place options[:destination]
 
-      if origin.nil? || destination.nil?
-        raise ArgumentError, 'Must provide origin and destination'
-      end
+      raise ArgumentError, 'Must provide origin and destination' if origin.nil? || destination.nil?
 
       routes_for(origin).detect { |route| route.destination == destination }
     end
@@ -143,6 +142,8 @@ module GoogleDistanceMatrix
       if object.is_a? Place
         object
       else
+        object = object.with_indifferent_access if object.is_a? Hash
+
         find_place_for_object(origins, object) ||
           find_place_for_object(destinations, object)
       end
@@ -196,4 +197,5 @@ module GoogleDistanceMatrix
       raise InvalidQuery, 'Matrix must be in mode driving and a departure_time must be set'
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end

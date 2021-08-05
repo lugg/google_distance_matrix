@@ -22,6 +22,7 @@ module GoogleDistanceMatrix
       if respond_to_needed_attributes? attributes_or_object
         extract_and_assign_attributes_from_object attributes_or_object
       elsif attributes_or_object.is_a? Hash
+        @extracted_attributes_from = attributes_or_object.with_indifferent_access
         assign_attributes attributes_or_object
       else
         raise ArgumentError, 'Must be either hash or object responding to lat, lng or address. '
@@ -36,12 +37,15 @@ module GoogleDistanceMatrix
     end
 
     def eql?(other)
+      return false unless other.is_a? self.class
+
       if address.present?
         address == other.address
       else
         lat_lng == other.lat_lng
       end
     end
+    alias == eql?
 
     def lat_lng?
       lat.present? && lng.present?
@@ -74,9 +78,7 @@ module GoogleDistanceMatrix
 
     def extract_and_assign_attributes_from_object(object)
       attrs = Hash[ATTRIBUTES.map do |attr_name|
-        if object.respond_to? attr_name
-          [attr_name, object.public_send(attr_name)]
-        end
+        [attr_name, object.public_send(attr_name)] if object.respond_to? attr_name
       end.compact]
 
       attrs.delete 'address' if attrs.key?('lat') || attrs.key?('lng')
