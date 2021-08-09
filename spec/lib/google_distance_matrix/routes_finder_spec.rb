@@ -3,7 +3,8 @@
 require 'spec_helper'
 
 describe GoogleDistanceMatrix::RoutesFinder, :request_recordings do
-  let(:origin_1) { GoogleDistanceMatrix::Place.new address: 'Karl Johans gate, Oslo' }
+  let(:origin_1_attributes) { { address: 'Karl Johans gate, Oslo' } }
+  let(:origin_1) { GoogleDistanceMatrix::Place.new origin_1_attributes }
   let(:origin_2) { GoogleDistanceMatrix::Place.new address: 'Askerveien 1, Asker' }
 
   let(:destination_1) { GoogleDistanceMatrix::Place.new address: 'Drammensveien 1, Oslo' }
@@ -70,6 +71,13 @@ describe GoogleDistanceMatrix::RoutesFinder, :request_recordings do
         expect(routes.map(&:origin).all? { |o| o == origin_1 }).to be true
       end
 
+      it 'still returns routes for origin if it has same address but different object_id' do
+        routes = subject.routes_for GoogleDistanceMatrix::Place.new origin_1_attributes
+
+        expect(routes.length).to eq 2
+        expect(routes.map(&:origin).all? { |o| o == origin_1 }).to be true
+      end
+
       it 'returns routes for given destination' do
         routes = subject.routes_for destination_2
 
@@ -82,6 +90,17 @@ describe GoogleDistanceMatrix::RoutesFinder, :request_recordings do
 
         expect(routes.length).to eq 2
         expect(routes.map(&:destination).all? { |d| d == destination_2 }).to be true
+      end
+
+      context 'place built from hash' do
+        let(:destination_2_built_from) { { address: 'Skjellestadhagen, Heggedal' } }
+
+        it 'returns routes for given hash a place was built from' do
+          routes = subject.routes_for destination_2_built_from
+
+          expect(routes.length).to eq 2
+          expect(routes.map(&:destination).all? { |d| d == destination_2 }).to be true
+        end
       end
     end
 
@@ -102,6 +121,16 @@ describe GoogleDistanceMatrix::RoutesFinder, :request_recordings do
         route = subject.route_for(origin: origin_1, destination: destination_2_built_from)
         expect(route.origin).to eq origin_1
         expect(route.destination).to eq destination_2
+      end
+
+      context 'place built from hash' do
+        let(:destination_2_built_from) { { address: 'Skjellestadhagen, Heggedal' } }
+
+        it 'returns route when you give it the hash the place was built from' do
+          route = subject.route_for(origin: origin_1, destination: destination_2_built_from)
+          expect(route.origin).to eq origin_1
+          expect(route.destination).to eq destination_2
+        end
       end
 
       it 'fails with argument error if origin is missing' do

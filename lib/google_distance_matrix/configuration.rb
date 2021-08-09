@@ -18,7 +18,7 @@ module GoogleDistanceMatrix
       mode avoid units language
       departure_time arrival_time
       transit_mode transit_routing_preference
-      traffic_model channel
+      traffic_model channel timeout
     ].freeze
 
     API_DEFAULTS = {
@@ -80,11 +80,13 @@ module GoogleDistanceMatrix
 
     validates :protocol, inclusion: { in: %w[http https] }, allow_blank: true
 
+    validates :timeout, numericality: true, allow_blank: true
+
     def initialize
       API_DEFAULTS.each_pair do |attr_name, value|
         self[attr_name] = begin
                             value.dup
-                          rescue
+                          rescue StandardError
                             value
                           end
       end
@@ -105,10 +107,7 @@ module GoogleDistanceMatrix
         attr_and_value[1].nil? || param_same_as_api_default?(attr_and_value)
       end
 
-      if google_business_api_client_id.present?
-        out << ['client', google_business_api_client_id]
-      end
-
+      out << ['client', google_business_api_client_id] if google_business_api_client_id.present?
       out << ['key', google_api_key] if google_api_key.present?
 
       out

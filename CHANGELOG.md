@@ -1,5 +1,25 @@
-## v.0.6.0 (to be released)
+## v.0.6.4
 
+* fix: no longer throwing "Wrong number of arguments" when using the cache (by brianlow)
+
+## v.0.6.3
+
+* chore: bumped dependency support up to Rails 6.1 (by mintyfresh)
+
+## v.0.6.2
+
+* chore: bumped dependency support up to Rails 6 (by zackchandler)
+
+## v.0.6.1
+
+* fix: when matrix places were built from hashes, passing hashes to route/s_for doesnt't work (by brauliomartinezlm)
+* fix: place comparison was not working with == (by brauliomartinezlm)
+
+## v.0.6.0
+
+* Depend on activemodel & activesupport < 5.3 (by brauliomartinezlm)
+* Tested with Ruby 2.5.
+* Dropped support for Ruby 2.2 and below.
 * Added support for `channel` (by michaelgpearce)
 
 ## v.0.5.0
