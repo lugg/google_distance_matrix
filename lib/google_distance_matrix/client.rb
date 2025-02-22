@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'net/http'
+
 module GoogleDistanceMatrix
   # HTTP client making request to Google's API
   class Client
@@ -39,8 +41,8 @@ module GoogleDistanceMatrix
       end
 
       handle response, url
-    rescue Timeout::Error => error
-      raise ServerError, error
+    rescue Timeout::Error => e
+      raise ServerError, e
     end
 
     private

@@ -23,6 +23,10 @@ module GoogleDistanceMatrix
       end
     end
 
+    def level
+      backend&.level || 1
+    end
+
     private
 
     def tag_msg(msg, tags)

@@ -1,3 +1,24 @@
+## v.0.7.1
+
+* added support for Rails 8, dropped upper version constraint (#64)
+
+## v.0.7.0
+
+* chore: bumped dependency support up to Rails 7.2 (by yenshirak)
+* dropped support for Ruby 2.x
+
+## v.0.6.7
+
+* chore: bumped dependency support up to Rails 7.1 (by justisb)
+
+## v.0.6.6
+
+* chore: require net/http in client.rb (#57)
+
+## v.0.6.5
+
+* chore: bumped dependency support up to Rails 7 (by justisb)
+
 ## v.0.6.4
 
 * fix: no longer throwing "Wrong number of arguments" when using the cache (by brianlow)
